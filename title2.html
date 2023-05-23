@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="index.css">
+    <title>Product Store  </title>
+</head>
+<body bgcolor="silver">
+<h1 align="center"><font face="impact" color="navy">Product's store </font></h1>
+<h2 align="center"><font face="impact" color="red">Your Online Products </font></h2>
+<center><font><div class="main-container">
+    <div class="center">
+        <div class="center-contents">
+            <button id="getAllProductsBwn">Get all the products...</button>
+            <br>
+            <hr color="black">
+            <input type="text" name="name-of-product" id="name-of-product" placeholder="Enter name of product">
+            <br>
+            <button id="getProductBwn">Get product by name...</button>
+            <br>
+            <hr color="black">
+            <br>
+            <input type="text" name="name-of-product-adding" placeholder="Enter product name">
+            <br>
+            <input type="text" name="type-of-product-adding" placeholder="Enter product type">
+            <br>
+            <input type="text" name="place-of-product-adding" placeholder="Enter product place">
+            <br>
+            <input type="number" name="warranty-of-product-adding" placeholder="Enter product warranty">
+            <br>
+            <button id="addProductBtn">Add product.....</button>
+            <hr color="black"></font></center>
+        </div>
+    </div>
+    <div class="right">
+        <div class="right-contents">
+            <div class="table-container">
+            <center><font color="olive"><table id="productTable" border="1">
+                <thead>
+                <tr>
+                    <th>  Name  </th>
+                    <th>  Type  </th>
+                    <th>  Place  </th>
+                    <th>  Warranty  </th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Product data will be inserted here dynamically -->
+                </tbody>
+            </table></font><center>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+    $("#getAllProductsBtn").click(function() {
+        $.get("/products", function(data) {
+            populateProductTable(data);
+        });
+    });
+
+    function populateProductTable(products) {
+        var tableBody = $("#productTable tbody");
+        tableBody.empty();
+
+        for (var i = 0; i < products.length; i++) {
+            var product = products[i];
+            var row = $("<tr>");
+            row.append($("<td>").text(product.name));
+            row.append($("<td>").text(product.type));
+            row.append($("<td>").text(product.place));
+            row.append($("<td>").text(product.warranty));
+            tableBody.append(row);
+        }
+    }
+});
+    $("#addProductBtn").click(function() {
+        var name = $("input[name='name-of-product-adding']").val();
+        var place = $("input[name='place-of-product-adding']").val();
+        var type = $("input[name='type-of-product-adding']").val();
+        var warranty = $("input[name='warranty-of-product-adding']").val();
+
+        var product = {
+            name: name,
+            place: place,
+            type: type,
+            warranty: warranty
+        };
+
+        $.ajax({
+            url: "/product",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(product),
+            success: function() {
+                alert("Product added successfully");
+            },
+            error: function() {
+                alert("Error adding product");
+            }
+        });
+    });
+    $(document).ready(function() {
+        $("#getAllProductsBtn").click(function() {
+            $.get("/products", function(data) {
+                populateProductTable(data);
+            });
+        });
+
+        $("#getProductBwn").click(function() {
+            var productName = $("#name-of-product").val();
+            $.get("/product/" + productName, function(data) {
+                populateProductTable([data]);
+            });
+        });
+
+        function populateProductTable(products) {
+            var tableBody = $("#productTable tbody");
+            tableBody.empty();
+
+            for (var i = 0; i < prod.length; i++) {
+                var prod = prod[i];
+                var row = $("<tr>");
+                row.append($("<td>").text(prod.name));
+                row.append($("<td>").text(prod.type));
+                row.append($("<td>").text(prod.place));
+                row.append($("<td>").text(prod.warranty));
+                tableBody.append(row);
+            }
+        }
+    });
+</script>
+</body>
+</html>
